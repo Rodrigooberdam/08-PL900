@@ -14,7 +14,9 @@
 
 ## Referencias
 
+> Estos son los enlaces en Español, pero deberían tomarse como secundarios, puesto que al ser el examen en inglés es MUY importante seguir la formación en inglés.
+
 - [Trabajo con datos en una aplicación de lienzo de Power Apps](https://docs.microsoft.com/es-es/learn/paths/work-with-data-in-a-canvas-app/)
-- [Rutas de aprendizaje sobre Power Apps](https://docs.microsoft.com/es-es/learn/browse/?term=power%20apps&resource_type=learning%20path
-- [Rutas de aprendizaje sobre Power Platform][(](https://docs.microsoft.com/es-es/learn/browse/?term=power%20platform&resource_type=learning%20path))
+- [Rutas de aprendizaje sobre Power Apps](https://docs.microsoft.com/es-es/learn/browse/?term=power%20apps&resource_type=learning%20path)
+- [Rutas de aprendizaje sobre Power Platform](https://docs.microsoft.com/es-es/learn/browse/?term=power%20platform&resource_type=learning%20path)
 
