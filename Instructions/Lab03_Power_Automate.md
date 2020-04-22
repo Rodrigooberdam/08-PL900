@@ -62,7 +62,7 @@ Task \#1: Create flow
 4. Select the trigger **When a Record is Created**, **Updated**, or **Deleted**.
 
    * Select **Create** for **Trigger condition**
-   * Select **Visits** for **The entity name**
+   * Select **Visit** for **The entity name**
    * Select **Organization** for **Scope**
 
 5.  Click **New Step**. This step is required to retrieve visitors information including email.

@@ -61,18 +61,18 @@ Task \#1: Create Canvas App
     -   Click to open the **Campus Management** solution.
 2.  Create new canvas application
 
-    -   Click **New** and select **App \&#124; Canvas App \&#124; Phone Form Factor**.
+    -   Click **New** and select **App &#124; Canvas App &#124; Phone Form Factor**.
         This will open the App Editor in a New window.
 -   If you are creating your first app, this will ask you to set the
         Country/region for the app. Click **Get Started.**
-    -   Click File and select Save As.
+-   Click File and select Save As.
 -   Check if **The Cloud** is selected. Enter **Campus Security** for Name and
         click **Save**. This will make sure that the changes are not removed if
     the app closes unexpectedly.
 3.  Connect to data source (Visits)
     1.  Click **View &#124; Data sources**
     2.  Click **See all entities**
-    3.  Select **Visits**
+    3.  Select **Visit**
 4.  To preserve work in progress, click **File &#124; Save** then press **Save**
 
 Task \#2: Display Visitor information
@@ -97,7 +97,7 @@ Task \#2: Display Visitor information
    -   Click **Add field** and select the following fields: Actual End, Actual Start, Building, Scheduled End, Scheduled Start, Visitor
    -   Press **Add**
    -   Change the order of the selected fields by dragging the field cards in the list. Recommended order is Visitor, Building, Scheduled Start, Scheduled End, Actual Start, Actual End
-   -   Select **Item** property and enter `LookUp(Visits, Code = textCode.Text)` 
+   -   Select **Item** property and enter `LookUp(Visit, Code = textCode.Text)` 
 
 3.  To preserve work in progress, click **File &#124; Save** then press **Save**
 
@@ -120,19 +120,19 @@ Task \#3: Add Check In and Check Out Buttons
 
    * Select **textCode** control
    * Select **OnChange** property
-   * Enter the following expression `Set(Visit, LookUp(Visits, Code = textCode.Text))`
-     It is the same expression as above except this time we save results in a global variable. That allows us to use the variable *Visit* throughout the app without the need to re-enter the entire lookup expression.
+   * Enter the following expression `Set(CurrentVisit, LookUp(Visit, Code = textCode.Text))`
+     It is the same expression as above except this time we save results in a global variable. That allows us to use the variable *CurrentVisit* throughout the app without the need to re-enter the entire lookup expression.
 
 2. Add buttons for checking in and checking out
    
-1. Select **Insert** tab
-   2. Click **Button**
-   3. Change the button **Text** property to **"Check In"**
-   4. Rename the button as **CheckInButton**
-   5. Click **Button** to insert another button
-   6. Change the button **Text** property to **"Check Out"**
-   7. Rename the button as **CheckOutButton**
-   8. Position the buttons side by side below the record form view 
+   * Select **Insert** tab
+   * Click **Button**
+   * Change the button **Text** property to **"Check In"**
+   * Rename the button as **CheckInButton**
+   * Click **Button** to insert another button
+   * Change the button **Text** property to **"Check Out"**
+   * Rename the button as **CheckOutButton**
+   * Position the buttons side by side below the record form view 
    
 3. Enable and disable buttons depending on visit data. 
    We would like to enable **Check In** button when the visit record has been located (not blank), record status is active, and the visit has not started yet, i.e. the actual start value is blank.
@@ -142,9 +142,8 @@ Task \#3: Add Check In and Check Out Buttons
    * Enter the expression below.
 
       ```
-      If(!IsBlank(Visit) 
-      && Visit.Status = 'Status (Visits)'.Active
-      && IsBlank(Visit.'Actual Start'),
+      If(!IsBlank(CurrentVisit) 
+      && IsBlank(CurrentVisit.'Actual Start'),
           DisplayMode.Edit,
           DisplayMode.Disabled
       )
@@ -152,31 +151,29 @@ Task \#3: Add Check In and Check Out Buttons
 
    The expression can be broken down as following:
 
-   * `!IsBlank(Visit)` - visit record was found
+   * `!IsBlank(CurrentVisit)` - visit record was found
    * `&&` - logical AND operator
-   * `Visit.Status = 'Status (Visits)'.Active` status of the record is *Active*
-   * `IsBlank(Visit.'Actual Start')` - Active Start field does not have any data in it
+   * `IsBlank(CurrentVisit.'Actual Start')` - Active Start field does not have any data in it
 
-4. We would like to enable **Check Out** button when the visit record has been located (not blank), record status is active, and the visit has already started, i.e. the actual start value is not blank.
+4.  We would like to enable **Check Out** button when the visit record has been located (not blank), record status is active, and the visit has already started, i.e. the actual start value is not blank.
 
    * Select the **DisplayMode** property of the **Check Out** button
 
    * Enter the expression below.
 
      ```
-     If(!IsBlank(Visit) 
-     && Visit.Status = 'Status (Visits)'.Active
-     && !IsBlank(Visit.'Actual Start'),
+     If(!IsBlank(CurrentVisit) 
+     && !IsBlank(CurrentVisit.'Actual Start'),
          DisplayMode.Edit,
          DisplayMode.Disabled
      )
      ```
 
-5. To preserve work in progress, click **File &#124; Save** then press **Save**.
+11. To preserve work in progress, click **File &#124; Save** then press **Save**.
 
-6. Press **F5** to run the app. Both buttons should be disabled. Enter the code value you copied previously and press **Tab** to move the focus away from the textbox. The **Check In** button should become enabled.
+12. Press **F5** to run the app. Both buttons should be disabled. Enter the code value you copied previously and press **Tab** to move the focus away from the textbox. The **Check In** button should become enabled.
 
-7. Press **ESC** to exit the running app.
+13. Press **ESC** to exit the running app.
 
 ## Task #4: Complete Check In and Check Out Process
 
@@ -192,19 +189,19 @@ To perform the check in and check out process we need to update CDS visit data a
 
    ```
    Patch(
-       Visits,
        Visit,
+       CurrentVisit,
        {'Actual Start': Now()}
    );
-   Refresh([@Visits]);
-   Set(Visit, LookUp(Visits, Code = textCode.Text));
+   Refresh([@Visit]);
+   Set(CurrentVisit, LookUp(Visit, Code = textCode.Text));
    ```
 
    This expression contains the following parts:
 
-   * `Patch(Visits, Visit, {'Actual Start': Now()});`. *Patch* method updates **Visits** entity, the record identified by **Visit** variable (which is the current visit). The expression sets the value of *Actual Start* field to the current date and time (*Now()* method).
-   * `Refresh([@Visits]);`. This expression refreshes the visit records as the underlying values have changed
-   * `Set(Visit, LookUp(Visits, Code = textCode.Text));` This expression updates the *Visit* variable with fresh data from CDS.
+   * `Patch(Visit, CurrentVisit, {'Actual Start': Now()});`. *Patch* method updates **Visit** entity, the record identified by **CurrentVisit** variable (which is the current visit). The expression sets the value of *Actual Start* field to the current date and time (*Now()* method).
+   * `Refresh([@Visit]);`. This expression refreshes the visit records as the underlying values have changed
+   * `Set(CurrentVisit, LookUp(Visit, Code = textCode.Text));` This expression updates the *CurrentVisit* variable with fresh data from CDS.
 
 3. Select **Check Out** button.
 
@@ -212,15 +209,15 @@ To perform the check in and check out process we need to update CDS visit data a
 
    ```
    Patch(
-       [@Visits],
-       Visit,
+       [@Visit],
+       CurrentVisit,
        {
            'Actual End': Now(),
            Status: 'Status (Visits)'.Inactive
        }
    );
-   Refresh([@Visits]);
-   Set(Visit, LookUp(Visits, Code = textCode.Text));
+   Refresh([@Visit]);
+   Set(CurrentVisit, LookUp(Visit, Code = textCode.Text));
    ```
 
    The only difference from check in expression is setting of the *Status* field to *Inactive* value.

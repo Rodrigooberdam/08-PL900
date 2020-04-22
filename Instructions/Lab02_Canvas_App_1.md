@@ -146,13 +146,13 @@ Because number of visits continuously grows, users need a feature to filter the 
 
 6. Select **Items** property
 
-7. In the expression, locate `[@Visits]` and replace them with `Filter(Visits,'Scheduled End' >= DatePicker1.SelectedDate)`. Full expression should look like the following:
+7. In the expression, locate `[@Visit]` and replace them with `Filter(Visit,'Scheduled End' >= DatePicker1.SelectedDate)`. Full expression should look like the following:
 
    ```
    SortByColumns(
    	Search(
         Filter(
-        	Visits,
+        	Visit,
             'Scheduled End' >= DatePicker1.SelectedDate
            ),
            TextSearchBox1.Text,
